@@ -37,7 +37,12 @@ R = 5
 # 1/f = (n-1)(1/r1+1/r2)   !! r1, r2 凸面皆為正
 
 n = 1.5
-r1, r2 = -15, -15
+r1, r2 = 20, 15
+'''
+建議正負10~30
+一正一負時負的絕對值要較大，否則就穿模了！
+焦距太大會不準 :(
+'''
 
 x = sqrt(r1 ** 2 - R ** 2)
 y = sqrt(r2 ** 2 - R ** 2)
@@ -59,7 +64,7 @@ b2 = sphere(pos=c2, radius=abs(r2), color=color.yellow, opacity=0.1*r2/abs(r2), 
 
 slope = zeros(9)
 y = zeros(9)
-turn = zeros(9)
+turn = zeros(9, dtype=vector)
 
 X = 3*abs(r1)
 
@@ -74,7 +79,7 @@ for angle in range(-7, 2):
     MIN = 1e9
 
     while ray.pos.x < 50:
-        rate(3000)
+        rate(2000)
         ray.pos += ray.v * dt
 
         if r1<0 and mag(ray.pos - c1) >= abs(r1) and ray.pos.x >= c1.x and not left:
@@ -89,12 +94,12 @@ for angle in range(-7, 2):
         if r2<0 and mag(ray.pos - c2) <= abs(r2) and not right:
             right = True
             ray.v = refraction_vector(n, 1, ray.v, c2 - ray.pos)
-            turn[i] = ray.pos.x
+            turn[i] = vec(ray.pos.x, ray.pos.y, 0)
             # print("rf3", ray.pos.x)
         if r2>0 and mag(ray.pos - c2) >= r2 and ray.pos.x >= c2.x and not right:
             right = True
             ray.v = refraction_vector(n, 1, ray.v, ray.pos - c2)
-            turn[i] = ray.pos.x
+            turn[i] = vec(ray.pos.x, ray.pos.y, 0)
             # print("rf4", ray.pos.x)
 
         # print(ray.v)
@@ -141,9 +146,10 @@ Y.pop()
 
 arrow(pos=vec(q_calculated,0,0), axis=vec(0,sum(Y)/7,0), shaftwidth=0.3, color=color.yellow)
 
+
 if q_calculated < 0:
     for i in range(0, 9):
-        ray = sphere(pos=vec(turn[i], y[i] + slope[i]*(turn[i]-X), 0), color=color.orange, radius=0.01, make_trail=True)
+        ray = sphere(pos=vec(turn[i].x, turn[i].y, 0), color=color.orange, radius=0.01, make_trail=True)
         ray.v = -vector(1, slope[i], 0)*10
         dt = 0.002
 
