@@ -37,11 +37,13 @@ R = 5
 # 1/f = (n-1)(1/r1+1/r2)   !! r1, r2 凸面皆為正
 
 n = 1.5
-r1, r2 = 20, 15
+# r1, r2 = 15, 20
+# r1, r2 = -25, 20
+r1, r2 = -20, -25
 '''
-建議正負10~30
+凸面為正、凹面為負
+建議正負15~25
 一正一負時負的絕對值要較大，否則就穿模了！
-焦距太大會不準 :(
 '''
 
 x = sqrt(r1 ** 2 - R ** 2)
@@ -66,7 +68,7 @@ slope = zeros(9)
 y = zeros(9)
 turn = zeros(9, dtype=vector)
 
-X = 3*abs(r1)
+X = 40
 
 for angle in range(-7, 2):
     i = angle+7
@@ -79,7 +81,7 @@ for angle in range(-7, 2):
     MIN = 1e9
 
     while ray.pos.x < 50:
-        rate(2000)
+        rate(6000)
         ray.pos += ray.v * dt
 
         if r1<0 and mag(ray.pos - c1) >= abs(r1) and ray.pos.x >= c1.x and not left:
@@ -118,7 +120,7 @@ print("f焦距 理論值: ", f_theory)
 l, r = -1000, 1000
 
 # 找最接近交點的值
-for _ in range(10000):
+for _ in range(150):
 
     ml, mr = l + (r - l) / 3, l + (r - l) * 2 / 3
     a, b = [], []
